@@ -43,7 +43,7 @@ sub where {
 	
 	if ( !$self->sql_where ) {
 		my $filter = LINQ::Database::Util::assertion_to_sql( $assertion );
-		return $self->_clone( sql_where => $filter ) if $filter;
+		return $self->_clone( sql_where => $assertion ) if $filter;
 	}
 	
 	$self->LINQ::Collection::where( $assertion );
@@ -101,7 +101,7 @@ sub _build_sth {
 	
 	my $sql_where = defined($self->sql_where) ? $self->sql_where : '';
 	if ( ref( $sql_where ) ) {
-		$sql_where = LINQ::Database::Util::selection_to_sql(
+		$sql_where = LINQ::Database::Util::assertion_to_sql(
 			$sql_where,
 			sub { $self->database->quote_identifier( @_ ) },
 			sub { $self->database->quote( @_ ) },

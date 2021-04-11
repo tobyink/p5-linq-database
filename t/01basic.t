@@ -78,7 +78,7 @@ is(
 
 is(
 	$db->{last_sql},
-	'SELECT * FROM pet WHERE ("id" == "2")',
+	'SELECT * FROM pet WHERE ("id" == \'2\')',
 	'... expected SQL'
 );
 
