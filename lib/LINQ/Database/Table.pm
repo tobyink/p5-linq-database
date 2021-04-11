@@ -7,7 +7,7 @@ package LINQ::Database::Table;
 our $AUTHORITY = 'cpan:TOBYINK';
 our $VERSION   = '0.000_001';
 
-use Class::Tiny qw( database name selector );
+use Class::Tiny qw( database name sql_select sql_where );
 
 use LINQ ();
 use LINQ::Util::Internal ();
@@ -29,12 +29,24 @@ sub select {
 	my ( $self ) = ( shift );
 	my $selection = LINQ::Util::Internal::assert_code( @_ );
 	
-	if ( !$self->selector ) {
+	if ( !$self->sql_select ) {
 		my $columns = LINQ::Database::Util::selection_to_sql( $selection );
-		return $self->_clone( selector => $selection ) if $columns;
+		return $self->_clone( sql_select => $selection ) if $columns;
 	}
 	
 	$self->LINQ::Collection::select( $selection );
+}
+
+sub where {
+	my ( $self ) = ( shift );
+	my $assertion = LINQ::Util::Internal::assert_code( @_ );
+	
+	if ( !$self->sql_where ) {
+		my $filter = LINQ::Database::Util::assertion_to_sql( $assertion );
+		return $self->_clone( sql_where => $filter ) if $filter;
+	}
+	
+	$self->LINQ::Collection::where( $assertion );
 }
 
 sub to_iterator {
@@ -61,8 +73,8 @@ sub _build_linq_iterator {
 	my ( $self ) = ( shift );
 	
 	my $sth = $self->_build_sth;
-	my $map = defined( $self->selector )
-		? $self->selector
+	my $map = defined( $self->sql_select )
+		? $self->sql_select
 		: sub { Object::Adhoc::object( $_ ) };
 	my $started = 0;
 	
@@ -79,15 +91,28 @@ sub _build_linq_iterator {
 sub _build_sth {
 	my ( $self ) = ( shift );
 	
-	my $columns = LINQ::Database::Util::selection_to_sql(
-		$self->selector,
-		sub { $self->database->quote_identifier( @_ ) },
-	) || '*';
+	my $sql_select = defined($self->sql_select) ? $self->sql_select : '*';
+	if ( ref( $sql_select ) ) {
+		$sql_select = LINQ::Database::Util::selection_to_sql(
+			$sql_select,
+			sub { $self->database->quote_identifier( @_ ) },
+		) || '*';
+	}
+	
+	my $sql_where = defined($self->sql_where) ? $self->sql_where : '';
+	if ( ref( $sql_where ) ) {
+		$sql_where = LINQ::Database::Util::selection_to_sql(
+			$sql_where,
+			sub { $self->database->quote_identifier( @_ ) },
+			sub { $self->database->quote( @_ ) },
+		) || '';
+	}
 	
 	$self->database->prepare( sprintf(
-		'SELECT %s FROM %s',
-		$columns,
+		'SELECT %s FROM %s%s',
+		$sql_select,
 		$self->name,
+		( $sql_where ? " WHERE $sql_where" : $sql_where ),
 	) );
 }
 

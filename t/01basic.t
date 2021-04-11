@@ -6,7 +6,6 @@
 
 Test that LINQ::Database works.
 
-
 =head1 AUTHOR
 
 Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
@@ -64,6 +63,22 @@ is_deeply(
 is(
 	$db->{last_sql},
 	'SELECT * FROM person',
+	'... expected SQL'
+);
+
+is(
+	$db
+		->table( 'pet' )
+		->where( check_fields 'id', -is => 2 )
+		->single
+		->name,
+	'Pascal',
+	'$db->table("pet")->where->single'
+);
+
+is(
+	$db->{last_sql},
+	'SELECT * FROM pet WHERE ("id" == "2")',
 	'... expected SQL'
 );
 
