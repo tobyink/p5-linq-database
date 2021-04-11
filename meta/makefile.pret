@@ -3,7 +3,15 @@
 @prefix : <http://ontologi.es/doap-deps#>.
 
 `LINQ-Database`
-	:test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
+	:runtime-requirement    [ :on "perl 5.008003"^^:CpanId ];
+	:runtime-requirement    [ :on "LINQ 0.001"^^:CpanId ];
+	:runtime-requirement    [ :on "Class::Tiny"^^:CpanId ];
+	:runtime-requirement    [ :on "Role::Tiny"^^:CpanId ];
+	:runtime-requirement    [ :on "Object::Adhoc"^^:CpanId ];
+	:runtime-requirement    [ :on "Scalar::Util"^^:CpanId ];
+	:runtime-requirement    [ :on "DBI"^^:CpanId ];
+	:runtime-requirement    [ :on "DBD::SQLite"^^:CpanId ];
+	:test-requirement       [ :on "Test::Modern"^^:CpanId ];
 	:develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
 	.
 

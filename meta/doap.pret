@@ -8,7 +8,7 @@
 	:homepage             <https://metacpan.org/release/LINQ-Database>;
 	:download-page        <https://metacpan.org/release/LINQ-Database>;
 	:bug-database         <http://rt.cpan.org/Dist/Display.html?Queue=LINQ-Database>;
-#	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-linq-database> ];
+	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-linq-database> ];
 	:created              2021-04-11;
 	:license              <http://dev.perl.org/licenses/>;
 	:maintainer           cpan:TOBYINK;
