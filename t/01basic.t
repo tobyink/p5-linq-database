@@ -39,11 +39,32 @@ my @people =
 is_deeply(
 	[ map $_->moniker, @people ],
 	[ qw( Anna Elsa Kristoff Sophia Rapunzel Lottie ) ],
+	'$db->table("person")->select->order_by'
 );
 
 is(
 	$db->{last_sql},
 	'SELECT "id", "name" FROM person',
+	'... expected SQL'
+);
+
+@people =
+	$db
+		->table( 'person' )
+		->order_by( -numeric, sub { $_->id } )
+		->select( fields 'id', 'name', -as => 'moniker' )
+		->to_list;
+
+is_deeply(
+	[ map $_->moniker, @people ],
+	[ qw( Anna Elsa Kristoff Sophia Rapunzel Lottie ) ],
+	'$db->table("person")->order_by->select'
+);
+
+is(
+	$db->{last_sql},
+	'SELECT * FROM person',
+	'... expected SQL'
 );
 
 done_testing;
