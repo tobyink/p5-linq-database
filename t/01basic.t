@@ -82,5 +82,22 @@ is(
 	'... expected SQL'
 );
 
+is(
+	$db
+		->table( 'pet' )
+		->where( check_fields 'id', -is => 2 )
+		->select( fields 'name', -as => 'moniker' )
+		->single
+		->moniker,
+	'Pascal',
+	'$db->table("pet")->where->select->single'
+);
+
+is(
+	$db->{last_sql},
+	'SELECT "name" FROM pet WHERE ("id" == \'2\')',
+	'... expected SQL'
+);
+
 done_testing;
 
