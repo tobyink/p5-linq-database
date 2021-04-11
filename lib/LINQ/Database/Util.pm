@@ -19,7 +19,7 @@ sub selection_to_sql {
 	$name_quoter ||= sub {
 		my $name = shift;
 		return sprintf( '"%s"', quotemeta( $name ) );
-	};	
+	};
 	
 	my @cols;
 	for my $field ( @{ $selection->fields } ) {
