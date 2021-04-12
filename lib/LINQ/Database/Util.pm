@@ -5,7 +5,7 @@ use warnings;
 package LINQ::Database::Util;
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.000_001';
+our $VERSION   = '0.000_002';
 
 use Scalar::Util qw( blessed );
 

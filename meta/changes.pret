@@ -4,3 +4,11 @@
 	issued  2021-04-12;
 	label   "Initial release".
 
+`LINQ-Database 0.000_002 cpan:TOBYINK`
+	issued  2021-04-12;
+	changeset [
+		item "More test cases for WHERE and combining SELECT with WHERE."^^Tests;
+		item "If `where` is called on a LINQ::Table that already has an SQL select, `where` should be applied to the output of `select`, not to the `input`."^^Bugfix;
+		item "`sql_where` should be passed through `assertion_to_sql`, not `selection_to_sql`."^^Bugfix;
+	].
+
