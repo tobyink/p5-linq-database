@@ -29,7 +29,7 @@ sub select {
 	my ( $self ) = ( shift );
 	my $selection = LINQ::Util::Internal::assert_code( @_ );
 	
-	if ( !$self->sql_select ) {
+	if ( ! defined($self->sql_select) ) {
 		my $columns = LINQ::Database::Util::selection_to_sql( $selection );
 		return $self->_clone( sql_select => $selection ) if $columns;
 	}
@@ -41,7 +41,7 @@ sub where {
 	my ( $self ) = ( shift );
 	my $assertion = LINQ::Util::Internal::assert_code( @_ );
 	
-	if ( !$self->sql_where ) {
+	if ( ! defined($self->sql_where) and ! defined($self->sql_select) ) {
 		my $filter = LINQ::Database::Util::assertion_to_sql( $assertion );
 		return $self->_clone( sql_where => $assertion ) if $filter;
 	}

@@ -99,5 +99,39 @@ is(
 	'... expected SQL'
 );
 
+is(
+	$db
+		->table( 'pet' )
+		->where( check_fields 'id', -match => [ 2 ] )
+		->select( fields 'name', -as => 'moniker' )
+		->single
+		->moniker,
+	'Pascal',
+	'$db->table("pet")->where(PERL)->select->single'
+);
+
+is(
+	$db->{last_sql},
+	'SELECT * FROM pet',
+	'... expected SQL'
+);
+
+is(
+	$db
+		->table( 'pet' )
+		->select( fields 'name', -as => 'moniker' )
+		->where( check_fields 'moniker', -match => qr/^Pas/ )
+		->single
+		->moniker,
+	'Pascal',
+	'$db->table("pet")->select->where->single'
+);
+
+is(
+	$db->{last_sql},
+	'SELECT "name" FROM pet',
+	'... expected SQL'
+);
+
 done_testing;
 
