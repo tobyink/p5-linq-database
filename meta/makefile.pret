@@ -4,7 +4,7 @@
 
 `LINQ-Database`
 	:runtime-requirement    [ :on "perl 5.008003"^^:CpanId ];
-	:runtime-requirement    [ :on "LINQ 0.001"^^:CpanId ];
+	:runtime-requirement    [ :on "LINQ 0.002"^^:CpanId ];
 	:runtime-requirement    [ :on "Class::Tiny"^^:CpanId ];
 	:runtime-requirement    [ :on "Role::Tiny"^^:CpanId ];
 	:runtime-requirement    [ :on "Object::Adhoc"^^:CpanId ];
