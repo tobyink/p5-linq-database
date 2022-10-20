@@ -12,3 +12,9 @@
 		item "`sql_where` should be passed through `assertion_to_sql`, not `selection_to_sql`."^^Bugfix;
 	].
 
+`LINQ-Database 0.001 cpan:TOBYINK`
+	issued  2022-10-20;
+	changeset [
+		item "Implement some simple SQL joins in the database instead of in Perl."^^Change;
+	].
+

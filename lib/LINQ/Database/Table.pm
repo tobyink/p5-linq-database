@@ -5,7 +5,7 @@ use warnings;
 package LINQ::Database::Table;
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.000_002';
+our $VERSION   = '0.001';
 
 use Class::Tiny qw( database name sql_select sql_where sql_alias _join_info );
 
