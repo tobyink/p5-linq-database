@@ -1,7 +1,7 @@
 # LINQ-Database
 
 [![MetaCPAN](https://img.shields.io/cpan/v/LINQ-Database.svg)](https://metacpan.org/release/LINQ-Database)
-![Licence](https://img.shields.io/cpan/l/LINQ-Database)
+[![Licence](https://img.shields.io/cpan/l/LINQ-Database)](https://metacpan.org/dist/LINQ-Database/source/LICENSE)
 [![Issues](https://img.shields.io/github/issues/tobyink/p5-linq-database)](https://github.com/tobyink/p5-linq-database/issues)
 [![CI](https://github.com/tobyink/p5-linq-database/workflows/CI/badge.svg)](https://github.com/tobyink/p5-linq-database/actions)
 [![Coveralls](https://coveralls.io/repos/tobyink/p5-linq-database/badge.svg?branch=master&amp;service=github)](https://coveralls.io/github/tobyink/p5-linq-database)
