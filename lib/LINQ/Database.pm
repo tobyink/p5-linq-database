@@ -84,6 +84,26 @@ LINQ::Database - LINQ extension for working with databases
       printf( "%s is a %s\n", $_->name, $_->species );
     } );
 
+Or:
+
+  use LINQ::DSL ':default_safe';
+  use LINQ::Database;
+  use DBI;
+  
+  my $db = 'LINQ::Database'->new( 'DBI'->connect( ... ) );
+  
+  my $collection = Linq {
+    From $db->table( 'pet' );
+    WhereX 'name', -like => 'P%', -nocase;
+    SelectX 'name', 'species';
+  };
+  
+  printf "Found %d results.\n", $collection->count;
+  
+  $collection->foreach( sub {
+    printf( "%s is a %s\n", $_->name, $_->species );
+  } );
+
 =head1 DESCRIPTION
 
 L<LINQ::Database> provides a L<LINQ::Collection>-compatible interface for
@@ -104,7 +124,7 @@ Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2021 by Toby Inkster.
+This software is copyright (c) 2021-2022 by Toby Inkster.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
