@@ -7,12 +7,13 @@ package LINQ::Database::Table;
 our $AUTHORITY = 'cpan:TOBYINK';
 our $VERSION   = '0.000_002';
 
-use Class::Tiny qw( database name sql_select sql_where );
+use Class::Tiny qw( database name sql_select sql_where sql_alias _join_info );
 
 use LINQ ();
 use LINQ::Util::Internal ();
 use LINQ::Database::Util ();
 use Object::Adhoc ();
+use Scalar::Util ();
 
 use Role::Tiny::With ();
 Role::Tiny::With::with 'LINQ::Collection';
@@ -108,6 +109,22 @@ sub _build_sth {
 		) || '';
 	}
 	
+	if ( $self->_join_info ) {
+		my $sql = sprintf(
+			'SELECT %s FROM %s t1 %s JOIN %s t2 ON t1.%s=t2.%s%s',
+			$sql_select,
+			$self->name,
+			( $self->_join_info->[0] =~ /^-(?:left|right|inner)$/ )
+				? uc(substr($self->_join_info->[0], 1))
+				: '',
+			$self->database->quote_identifier( $self->_join_info->[1] ),
+			$self->database->quote_identifier( $self->_join_info->[2] ),
+			$self->database->quote_identifier( $self->_join_info->[3] ),
+			( $sql_where ? " WHERE $sql_where" : $sql_where ),
+		);
+		return $self->database->prepare($sql);
+	}
+	
 	$self->database->prepare( sprintf(
 		'SELECT %s FROM %s%s',
 		$sql_select,
@@ -115,5 +132,41 @@ sub _build_sth {
 		( $sql_where ? " WHERE $sql_where" : $sql_where ),
 	) );
 }
+
+sub join {
+	my ( $self, $other, $hint, $field1, $field2, $joiner );
+	
+	if ( @_ == 6 ) {
+		( $self, $other, $hint, $field1, $field2, $joiner ) = @_;
+	}
+	else {
+		( $self, $other ) = ( shift, shift );
+		( $field1, $field2, $joiner ) = @_;
+		$hint = '-outer';
+	}
+	
+	if ( Scalar::Util::blessed($self)   and $self->isa(__PACKAGE__)
+	and  Scalar::Util::blessed($other)  and $other->isa(__PACKAGE__)
+	and  Scalar::Util::blessed($field1) and $field1->isa('LINQ::FieldSet::Single')
+	and  Scalar::Util::blessed($field2) and $field2->isa('LINQ::FieldSet::Single')
+	and  $joiner eq '-auto'
+	and  $self->database == $other->database
+	and  !$self->_join_info
+	and  !$other->_join_info and !$other->sql_where and !$other->sql_select
+	) {
+		return $self->_clone(
+			_join_info => [ $hint, $other->name, $field1->fields->[0]->name, $field2->fields->[0]->name ]
+		);
+	}
+	
+	if ( $joiner eq -auto ) {
+		require LINQ::DSL;
+		$joiner = LINQ::DSL::HashSmush();
+	}
+	
+	return $self->LINQ::Collection::join( $hint, $other, $field1, $field2, $joiner );
+}
+
+
 
 1;
